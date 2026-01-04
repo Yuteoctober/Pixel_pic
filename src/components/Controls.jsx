@@ -27,7 +27,7 @@ const Controls = ({
             <input
               type="range"
               min="1"
-              max="64"
+              max="128"
               step="1"
               value={pixelSize}
               onChange={(e) => setPixelSize(Number(e.target.value))}
