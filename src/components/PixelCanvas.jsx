@@ -36,22 +36,29 @@ const PixelCanvas = ({ imageSrc, pixelSize, contrast, brightness, saturation, ca
       // Apply Filters
       ctx.filter = `contrast(${contrast}%) brightness(${brightness}%) saturate(${saturation}%)`;
 
-      // Step 1: Draw image small (pixelate)
-      // We draw it into the canvas itself (top-left) temporarily
-      ctx.drawImage(img, 0, 0, scaledW, scaledH);
+      // Step 1: Draw image small (pixelate) into an offscreen canvas
+      const offscreen = document.createElement('canvas');
+      offscreen.width = scaledW;
+      offscreen.height = scaledH;
+      const offCtx = offscreen.getContext('2d');
+      offCtx.imageSmoothingEnabled = false;
+      
+      // Draw to offscreen canvas
+      offCtx.drawImage(img, 0, 0, scaledW, scaledH);
 
-      // Reset filter so it doesn't apply again when scaling up
+      // Reset filter so it doesn't apply again when scaling up (applied to main ctx)
       ctx.filter = 'none';
 
-      // Step 2: Draw the small version back up to full size
-      // The source is the canvas itself (0,0 to scaledW,scaledH)
-      // The dest is the full canvas (0,0 to w,h)
-      ctx.drawImage(canvas, 0, 0, scaledW, scaledH, 0, 0, w, h);
+      // Clear the main canvas before drawing final result
+      ctx.clearRect(0, 0, w, h);
+
+      // Step 2: Draw the small version back up to full size on main canvas
+      ctx.drawImage(offscreen, 0, 0, scaledW, scaledH, 0, 0, w, h);
     };
   }, [imageSrc, pixelSize, contrast, brightness, saturation, ref]);
 
   return (
-    <div className="w-full max-w-4xl mx-auto flex justify-center mb-8 overflow-hidden border-4 border-pixel-muted bg-pixel-base shadow-pixel">
+    <div className="w-full max-w-4xl mx-auto flex justify-center mb-8 overflow-hidden border-4 border-pixel-muted bg-pixel-base shadow-pixel ">
       <canvas
         ref={ref}
         className="max-w-full h-auto object-contain image-pixelated"
