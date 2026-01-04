@@ -58,7 +58,7 @@ const PixelEditor = () => {
         >
           {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
         </button>
-        <div className="inline-flex items-center justify-center p-4 bg-pixel-card border-4 border-pixel-primary shadow-pixel-accent mb-4 transform -rotate-2 hover:rotate-0 transition-transform">
+        <div className="inline-flex items-center justify-center p-4 bg-pixel-card border-4 border-pixel-primary shadow-pixel-accent mb-4 mt-14 transform -rotate-2 hover:rotate-0 transition-transform">
             <Layers className="w-8 h-8 md:w-12 md:h-12 text-pixel-primary mr-4" />
             <h1 className="text-2xl md:text-4xl font-press-start text-color-text text-shadow-pixel">
                 PIXEL PIC
