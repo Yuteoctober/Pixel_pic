@@ -1,5 +1,6 @@
-import React from 'react';
-import { Download, RefreshCw, Settings, LayersPlus  } from 'lucide-react';
+
+import PropTypes from 'prop-types';
+import { Download, RefreshCw, Settings, LayersPlus, Eraser } from 'lucide-react';
 
 const Controls = ({ 
   pixelSize, setPixelSize, 
@@ -7,7 +8,9 @@ const Controls = ({
   brightness, setBrightness,
   saturation, setSaturation,
   onDownload, onReset,
-  onNewFile
+  onNewFile,
+  onRemoveBackground,
+  isProcessing
 }) => {
   return (
     <div className="w-full max-w-2xl mx-auto bg-pixel-card border-4 border-pixel-border p-6 shadow-pixel mb-8">
@@ -16,8 +19,7 @@ const Controls = ({
         <h2 className="text-lg font-press-start text-pixel-primary">SETTINGS</h2>
       </div>
 
-      <div className="space-y-">
-        <div className="space-y-6">
+      <div className="space-y-6">
           {/* Pixel Size */}
           <div>
             <div className="flex justify-between mb-2 font-press-start text-xs text-pixel-muted">
@@ -115,11 +117,41 @@ const Controls = ({
               <span className='mt-1 md:right-0 right-1 relative'>
                 SAVE
               </span>
+
           </button>
         </div>
-      </div>
+        
+        <div className="pt-4 border-t-2  border-pixel-muted/30 mt-4">
+          <button
+            onClick={onRemoveBackground}
+            disabled={isProcessing}
+            className={`w-full flex border-2 border-pixel-muted items-center justify-center gap-2 py-3 px-4 ${isProcessing ? 'bg-pixel-muted cursor-not-allowed' : 'bg-pixel-primary text-pixel-base hover:bg-pixel-accent-hover'} transition-all font-press-start text-xs shadow-pixel-sm active:translate-y-1 active:shadow-none`}
+          >
+            <Eraser className="w-5 h-5 text-pixel-muted" />
+            <span className='mt-1 text-pixel-muted relative'>
+              REMOVE BACKGROUND
+            </span>
+          </button>
+        </div>
+
     </div>
   );
+};
+
+Controls.propTypes = {
+  pixelSize: PropTypes.number.isRequired,
+  setPixelSize: PropTypes.func.isRequired,
+  contrast: PropTypes.number.isRequired,
+  setContrast: PropTypes.func.isRequired,
+  brightness: PropTypes.number.isRequired,
+  setBrightness: PropTypes.func.isRequired,
+  saturation: PropTypes.number.isRequired,
+  setSaturation: PropTypes.func.isRequired,
+  onDownload: PropTypes.func.isRequired,
+  onReset: PropTypes.func.isRequired,
+  onNewFile: PropTypes.func.isRequired,
+  onRemoveBackground: PropTypes.func, // Optional as it might not be passed initially
+  isProcessing: PropTypes.bool,
 };
 
 export default Controls;

@@ -1,8 +1,9 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import ImageUploader from './components/ImageUploader';
 import Controls from './components/Controls';
 import PixelCanvas from './components/PixelCanvas';
-import { Layers, Sun, Moon } from 'lucide-react';
+import { Layers, Sun, Moon, Sparkles } from 'lucide-react';
+import { removeBackground } from '@imgly/background-removal';
 
 const PixelEditor = () => {
   const [imageSrc, setImageSrc] = useState(null);
@@ -10,11 +11,12 @@ const PixelEditor = () => {
   const [contrast, setContrast] = useState(100);
   const [brightness, setBrightness] = useState(100);
   const [saturation, setSaturation] = useState(100);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
   const canvasRef = useRef(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
   }, [theme]);
@@ -37,6 +39,24 @@ const PixelEditor = () => {
     setContrast(100);
     setBrightness(100);
     setSaturation(100);
+  };
+
+
+
+  const handleRemoveBackground = async () => {
+    if (!imageSrc || isProcessing) return;
+    
+    try {
+      setIsProcessing(true);
+      const blob = await removeBackground(imageSrc);
+      const url = URL.createObjectURL(blob);
+      setImageSrc(url);
+    } catch (error) {
+      console.error('Failed to remove background:', error);
+      alert('Failed to remove background. Please try again.');
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleNewFile = () => {
@@ -95,7 +115,20 @@ const PixelEditor = () => {
               onDownload={handleDownload}
               onReset={handleReset}
               onNewFile={handleNewFile}
+              onRemoveBackground={handleRemoveBackground}
+              isProcessing={isProcessing}
             />
+            
+            {/* Loading Overlay */}
+            {isProcessing && (
+              <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex flex-col items-center justify-center">
+                <div className="bg-pixel-card p-8 border-4 border-pixel-primary shadow-pixel text-center">
+                  <Sparkles className="w-12 h-12 text-pixel-primary mx-auto mb-4 animate-spin" />
+                  <p className="font-press-start text-pixel-primary mb-2">DOING MAGIC...</p>
+                  <p className="font-mono text-xs text-pixel-muted">REMOVING BACKGROUND (This may take a moment)</p>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </main>

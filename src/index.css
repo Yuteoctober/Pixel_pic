@@ -88,7 +88,8 @@ button,
 
 /* Slider Styles */
 .slider-input {
-  @apply appearance-none outline-none;
+  @apply appearance-none outline-none h-6;
+  touch-action: none;
 }
 
 .slider-input::-webkit-slider-thumb {

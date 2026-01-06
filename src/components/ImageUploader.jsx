@@ -1,5 +1,6 @@
-import React, { useRef, useState } from 'react';
-import { Upload, Image as ImageIcon } from 'lucide-react';
+import { useRef, useState } from 'react';
+import PropTypes from 'prop-types';
+import { Upload } from 'lucide-react';
 import clsx from 'clsx';
 
 const ImageUploader = ({ onImageUpload }) => {
@@ -77,6 +78,11 @@ const ImageUploader = ({ onImageUpload }) => {
       <div className="absolute bottom-0 right-0 w-2 h-2 bg-pixel-text -mr-1 -mb-1" />
     </div>
   );
+
+};
+
+ImageUploader.propTypes = {
+  onImageUpload: PropTypes.func.isRequired,
 };
 
 export default ImageUploader;

@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
 
 const PixelCanvas = ({ imageSrc, pixelSize, contrast, brightness, saturation, canvasRef }) => {
   const internalCanvasRef = useRef(null);
@@ -47,7 +48,7 @@ const PixelCanvas = ({ imageSrc, pixelSize, contrast, brightness, saturation, ca
       offCtx.drawImage(img, 0, 0, scaledW, scaledH);
 
       // Reset filter so it doesn't apply again when scaling up (applied to main ctx)
-      ctx.filter = 'none';
+
 
       // Clear the main canvas before drawing final result
       ctx.clearRect(0, 0, w, h);
@@ -66,6 +67,19 @@ const PixelCanvas = ({ imageSrc, pixelSize, contrast, brightness, saturation, ca
       />
     </div>
   );
+
+};
+
+PixelCanvas.propTypes = {
+  imageSrc: PropTypes.string,
+  pixelSize: PropTypes.number.isRequired,
+  contrast: PropTypes.number.isRequired,
+  brightness: PropTypes.number.isRequired,
+  saturation: PropTypes.number.isRequired,
+  canvasRef: PropTypes.oneOfType([
+    PropTypes.func, 
+    PropTypes.shape({ current: PropTypes.object })
+  ]),
 };
 
 export default PixelCanvas;
